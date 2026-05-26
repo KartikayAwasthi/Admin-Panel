@@ -14,11 +14,17 @@ export default {
         secondaryDark: "#1a1a1a",
         grayBg: "#f5f5f5",
         lightGray: "#e5e5e5",
+        darkCard: "#1a1a1a",
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
       },
+      backgroundColor: {
+        darkPanel: "#0f0f0f",
+        darkCard: "#1a1a1a",
+      },
     },
   },
+  darkMode: "class",
   plugins: [],
 };

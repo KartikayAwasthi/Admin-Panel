@@ -1,5 +1,5 @@
-import { LogOut } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { LogOut, Settings } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -10,30 +10,32 @@ const Navbar = () => {
   };
 
   return (
-    <div className="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 sticky top-0 z-50">
-
-      <div className="w-32">
-      </div>
+    <div className="h-20 bg-secondaryDark border-b border-gray-800 flex items-center justify-between px-8 sticky top-0 z-50">
+      <div className="w-32"></div>
 
       <div className="flex flex-col items-center">
-        <img
-          src="/logo.png"
-          alt="logo"
-          className="h-12 object-contain"
-        />
-
+        <img src="/logo.png" alt="logo" className="h-12 object-contain" />
         <h1 className="text-sm font-semibold tracking-wide text-primary">
           TECHPOLARITY ADMIN
         </h1>
       </div>
 
-      <button
-        onClick={logout}
-        className="bg-primary text-white px-5 py-2 rounded-lg flex items-center gap-2 hover:scale-105 transition"
-      >
-        <LogOut size={18} />
-        Logout
-      </button>
+      <div className="flex items-center gap-4">
+        <Link
+          to="/settings"
+          className="text-gray-400 hover:text-primary p-2 hover:bg-gray-800 rounded-lg transition"
+        >
+          <Settings size={20} />
+        </Link>
+
+        <button
+          onClick={logout}
+          className="bg-primary text-white px-5 py-2 rounded-lg flex items-center gap-2 hover:bg-red-600 transition"
+        >
+          <LogOut size={18} />
+          Logout
+        </button>
+      </div>
     </div>
   );
 };

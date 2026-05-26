@@ -39,18 +39,17 @@ const Dashboard = () => {
 
   return (
     <AdminLayout>
-
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold">
+      <div className="mb-12">
+        <h1 className="text-5xl font-black text-white">
           Dashboard
         </h1>
 
-        <p className="text-gray-500 mt-2">
-          Welcome to TechPolarity Admin Panel
+        <p className="text-gray-400 mt-3 text-lg">
+          Welcome back to TechPolarity Admin Panel
         </p>
       </div>
 
-      <div className="grid grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-4 gap-6 mb-12">
 
         <StatsCard
           title="Total Articles"
@@ -74,7 +73,7 @@ const Dashboard = () => {
 
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-3 gap-6 mb-8">
 
         <div className="col-span-2">
           <OverviewChart />

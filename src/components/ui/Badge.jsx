@@ -1,10 +1,10 @@
 const Badge = ({ children, variant = "primary" }) => {
   const variants = {
-    primary: "bg-red-100 text-primary",
-    success: "bg-green-100 text-green-700",
-    warning: "bg-yellow-100 text-yellow-700",
-    danger: "bg-red-100 text-red-700",
-    gray: "bg-gray-100 text-gray-700",
+    primary: "bg-primary/20 text-primary",
+    success: "bg-green-500/20 text-green-400",
+    warning: "bg-yellow-500/20 text-yellow-400",
+    danger: "bg-red-500/20 text-red-400",
+    gray: "bg-gray-700 text-gray-300",
   };
 
   return (
