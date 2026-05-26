@@ -1,114 +1,93 @@
 import { useEffect, useState } from "react";
-import AdminLayout from "../../components/layout/AdminLayout";
-import {
-  deleteArticle,
-  getArticles,
-} from "../../api/articleApi";
-
-import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { Plus } from "lucide-react";
+import AdminLayout from "../../components/layout/AdminLayout";
+import ArticleTable from "../../components/articles/ArticleTable";
+import SearchBar from "../../components/articles/SearchBar";
+import StatusFilter from "../../components/articles/StatusFilter";
+import Pagination from "../../components/articles/Pagination";
+import DeleteModal from "../../components/articles/DeleteModal";
+import Button from "../../components/ui/Button";
+import EmptyState from "../../components/ui/EmptyState";
+import Loader from "../../components/ui/Loader";
+import { useArticles } from "../../hooks/useArticles";
+import { usePagination } from "../../hooks/usePagination";
+import { useDebounce } from "../../hooks/useDebounce";
 
 const ArticlesList = () => {
-  const [articles, setArticles] = useState([]);
+  const { articles, loading, fetchArticles, deleteArticle } = useArticles();
+  const { page, goToPage } = usePagination();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, slug: null, title: "" });
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const debouncedSearch = useDebounce(searchTerm, 300);
 
   useEffect(() => {
-    fetchArticles();
-  }, []);
+    fetchArticles({
+      page,
+      limit: 10,
+      search: debouncedSearch,
+      status: statusFilter,
+    });
+  }, [page, debouncedSearch, statusFilter]);
 
-  const fetchArticles = async () => {
-    try {
-      const res = await getArticles({
-        page: 1,
-        limit: 10,
-      });
-
-      setArticles(res.data.data || []);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleDeleteClick = (slug, title) => {
+    setDeleteModal({ isOpen: true, slug, title });
   };
 
-  const handleDelete = async (slug) => {
-    try {
-      await deleteArticle(slug);
-
-      toast.success("Article Deleted");
-
-      fetchArticles();
-    } catch (error) {
-      toast.error("Delete Failed");
+  const handleDeleteConfirm = async () => {
+    setDeleteLoading(true);
+    const success = await deleteArticle(deleteModal.slug);
+    if (success) {
+      setDeleteModal({ isOpen: false, slug: null, title: "" });
+      fetchArticles({ page, limit: 10 });
     }
+    setDeleteLoading(false);
   };
 
   return (
     <AdminLayout>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">
-          Articles
-        </h1>
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-4xl font-bold">Articles</h1>
+            <p className="text-gray-500 mt-2">Manage and publish articles</p>
+          </div>
 
-        <Link
-          to="/articles/create"
-          className="bg-primary px-5 py-3 rounded-lg"
-        >
-          Create Article
-        </Link>
+          <Link to="/articles/create">
+            <Button className="flex items-center gap-2">
+              <Plus size={20} />
+              New Article
+            </Button>
+          </Link>
+        </div>
+
+        <div className="flex gap-4 mb-6">
+          <SearchBar onSearch={setSearchTerm} />
+          <StatusFilter value={statusFilter} onChange={setStatusFilter} />
+        </div>
       </div>
 
-      <div className="bg-secondaryDark rounded-xl overflow-hidden border border-primary">
-        <table className="w-full">
-          <thead className="bg-primary text-white">
-            <tr>
-              <th className="p-4 text-left">
-                Title
-              </th>
+      {loading ? (
+        <Loader />
+      ) : articles.length === 0 ? (
+        <EmptyState title="No articles found" description="Create your first article to get started" />
+      ) : (
+        <>
+          <ArticleTable articles={articles} onDelete={handleDeleteClick} loading={deleteLoading} />
+          <Pagination page={page} totalPages={10} onPageChange={goToPage} />
+        </>
+      )}
 
-              <th className="p-4 text-left">
-                Status
-              </th>
-
-              <th className="p-4 text-left">
-                Actions
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {articles.map((article) => (
-              <tr
-                key={article.slug}
-                className="border-b border-gray-800"
-              >
-                <td className="p-4">
-                  {article.title}
-                </td>
-
-                <td className="p-4">
-                  {article.status}
-                </td>
-
-                <td className="p-4 flex gap-3">
-                  <Link
-                    to={`/articles/edit/${article.slug}`}
-                    className="bg-blue-500 px-4 py-2 rounded-lg"
-                  >
-                    Edit
-                  </Link>
-
-                  <button
-                    onClick={() =>
-                      handleDelete(article.slug)
-                    }
-                    className="bg-red-500 px-4 py-2 rounded-lg"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DeleteModal
+        isOpen={deleteModal.isOpen}
+        onClose={() => setDeleteModal({ isOpen: false, slug: null, title: "" })}
+        onConfirm={handleDeleteConfirm}
+        title={deleteModal.title}
+        loading={deleteLoading}
+      />
     </AdminLayout>
   );
 };

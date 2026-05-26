@@ -4,10 +4,20 @@ import AdminLayout from "../../components/layout/AdminLayout";
 
 import StatsCard from "../../components/dashboard/StatsCard";
 
-import { getStats } from "../../api/articleApi";
+import RecentArticles from "../../components/dashboard/RecentArticles";
+
+import TrendingArticles from "../../components/dashboard/TrendingArticles";
+
+import OverviewChart from "../../components/dashboard/OverviewChart";
+
+import Loader from "../../components/ui/Loader";
+
+import { articleService } from "../../services/articleService";
 
 const Dashboard = () => {
   const [stats, setStats] = useState({});
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchStats();
@@ -15,13 +25,17 @@ const Dashboard = () => {
 
   const fetchStats = async () => {
     try {
-      const res = await getStats();
+      const res = await articleService.getStats();
 
       setStats(res.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) return <Loader />;
 
   return (
     <AdminLayout>
@@ -36,7 +50,7 @@ const Dashboard = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-4 gap-6">
+      <div className="grid grid-cols-4 gap-6 mb-8">
 
         <StatsCard
           title="Total Articles"
@@ -58,6 +72,20 @@ const Dashboard = () => {
           value={stats.trending || 0}
         />
 
+      </div>
+
+      <div className="grid grid-cols-3 gap-6">
+
+        <div className="col-span-2">
+          <OverviewChart />
+        </div>
+
+        <TrendingArticles />
+
+      </div>
+
+      <div className="mt-8">
+        <RecentArticles />
       </div>
 
     </AdminLayout>
