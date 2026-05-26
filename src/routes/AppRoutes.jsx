@@ -1,11 +1,13 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+
 import Login from "../pages/auth/Login";
 import Dashboard from "../pages/dashboard/Dashboard";
 import ArticlesList from "../pages/articles/ArticlesList";
 import CreateArticle from "../pages/articles/CreateArticle";
 import EditArticle from "../pages/articles/EditArticle";
 import ArticlePreview from "../pages/articles/ArticlePreview";
-import Settings from "../pages/setting/Settings";
+
+import AdminLayout from "../components/layout/AdminLayout";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 
 const AppRoutes = () => {
@@ -17,55 +19,25 @@ const AppRoutes = () => {
         path="/"
         element={
           <ProtectedRoute>
-            <Dashboard />
+            <AdminLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<Navigate to="/dashboard" />} />
 
-      <Route
-        path="/articles"
-        element={
-          <ProtectedRoute>
-            <ArticlesList />
-          </ProtectedRoute>
-        }
-      />
+        <Route path="dashboard" element={<Dashboard />} />
 
-      <Route
-        path="/articles/create"
-        element={
-          <ProtectedRoute>
-            <CreateArticle />
-          </ProtectedRoute>
-        }
-      />
+        <Route path="articles" element={<ArticlesList />} />
 
-      <Route
-        path="/articles/edit/:slug"
-        element={
-          <ProtectedRoute>
-            <EditArticle />
-          </ProtectedRoute>
-        }
-      />
+        <Route path="articles/create" element={<CreateArticle />} />
 
-      <Route
-        path="/articles/preview/:slug"
-        element={
-          <ProtectedRoute>
-            <ArticlePreview />
-          </ProtectedRoute>
-        }
-      />
+        <Route path="articles/edit/:slug" element={<EditArticle />} />
 
-      <Route
-        path="/settings"
-        element={
-          <ProtectedRoute>
-            <Settings />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="articles/preview/:slug"
+          element={<ArticlePreview />}
+        />
+      </Route>
     </Routes>
   );
 };

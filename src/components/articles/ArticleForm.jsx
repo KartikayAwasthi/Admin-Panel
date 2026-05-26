@@ -1,103 +1,84 @@
-import { useForm } from "react-hook-form";
-import InputField from "../forms/InputField";
-import TextEditor from "../forms/TextEditor";
-import SelectField from "../forms/SelectField";
-import Button from "../ui/Button";
-import { STATUS_OPTIONS } from "../../utils/constants";
-import { generateSlug } from "../../utils/helpers";
+import { useState } from "react";
 
-const ArticleForm = ({ onSubmit, isLoading, initialData = {} }) => {
-  const { register, handleSubmit, watch, setValue } = useForm({
-    defaultValues: initialData,
+const ArticleForm = () => {
+  const [formData, setFormData] = useState({
+    title: "",
+    slug: "",
+    description: "",
+    content: "",
+    status: "published",
   });
 
-  const title = watch("title");
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  const handleTitleChange = (val) => {
-    setValue("slug", generateSlug(val));
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    console.log(formData);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 bg-white p-8 rounded-xl border border-gray-200">
-      <div className="grid grid-cols-2 gap-6">
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Title *</label>
-          <input
-            type="text"
-            {...register("title", { required: "Title is required" })}
-            placeholder="Article title"
-            onChange={(e) => handleTitleChange(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 outline-none focus:border-primary"
-          />
-        </div>
+    <form
+      onSubmit={handleSubmit}
+      className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-5"
+    >
+      <input
+        type="text"
+        name="title"
+        placeholder="Article Title"
+        value={formData.title}
+        onChange={handleChange}
+        className="w-full bg-zinc-800 rounded-xl p-4 outline-none"
+      />
 
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Slug *</label>
-          <input
-            type="text"
-            {...register("slug", { required: "Slug is required" })}
-            placeholder="url-friendly-slug"
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 outline-none focus:border-primary"
-          />
-        </div>
-      </div>
+      <input
+        type="text"
+        name="slug"
+        placeholder="Article Slug"
+        value={formData.slug}
+        onChange={handleChange}
+        className="w-full bg-zinc-800 rounded-xl p-4 outline-none"
+      />
 
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Description *</label>
-        <textarea
-          {...register("description", { required: "Description is required" })}
-          placeholder="Article description"
-          rows={3}
-          className="w-full px-4 py-3 rounded-lg border border-gray-300 outline-none focus:border-primary"
-        />
-      </div>
+      <textarea
+        rows="4"
+        name="description"
+        placeholder="Description"
+        value={formData.description}
+        onChange={handleChange}
+        className="w-full bg-zinc-800 rounded-xl p-4 outline-none"
+      />
 
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Content *</label>
-        <TextEditor value={watch("content")} onChange={(val) => setValue("content", val)} />
-      </div>
+      <textarea
+        rows="8"
+        name="content"
+        placeholder="Article Content"
+        value={formData.content}
+        onChange={handleChange}
+        className="w-full bg-zinc-800 rounded-xl p-4 outline-none"
+      />
 
-      <div className="grid grid-cols-2 gap-6">
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Domain Slug</label>
-          <input
-            type="text"
-            {...register("domain_slug")}
-            placeholder="domain-slug"
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 outline-none focus:border-primary"
-          />
-        </div>
+      <select
+        name="status"
+        value={formData.status}
+        onChange={handleChange}
+        className="w-full bg-zinc-800 rounded-xl p-4 outline-none"
+      >
+        <option value="published">Published</option>
+        <option value="draft">Draft</option>
+      </select>
 
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Status *</label>
-          <select
-            {...register("status")}
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 outline-none focus:border-primary"
-          >
-            {STATUS_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Tags (comma separated)</label>
-        <input
-          type="text"
-          {...register("tags")}
-          placeholder="tag1, tag2, tag3"
-          className="w-full px-4 py-3 rounded-lg border border-gray-300 outline-none focus:border-primary"
-        />
-      </div>
-
-      <div className="flex gap-3 pt-4">
-        <Button type="submit" disabled={isLoading} className="flex-1">
-          {isLoading ? "Saving..." : "Publish Article"}
-        </Button>
-      </div>
+      <button
+        type="submit"
+        className="bg-violet-600 hover:bg-violet-700 transition-all px-6 py-3 rounded-xl font-semibold"
+      >
+        Publish Article
+      </button>
     </form>
   );
 };

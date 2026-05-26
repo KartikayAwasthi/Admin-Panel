@@ -1,67 +1,75 @@
+import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
   FileText,
   PlusCircle,
   Settings,
-} from "lucide-react";
-
-import { Link, useLocation } from "react-router-dom";
+  LogOut,
+} from 'lucide-react';
 
 const Sidebar = () => {
-  const location = useLocation();
-
   const menus = [
     {
-      name: "Dashboard",
-      path: "/",
-      icon: <LayoutDashboard size={20} />,
+      title: 'Dashboard',
+      path: '/dashboard',
+      icon: LayoutDashboard,
     },
     {
-      name: "Articles",
-      path: "/articles",
-      icon: <FileText size={20} />,
+      title: 'Articles',
+      path: '/articles',
+      icon: FileText,
     },
     {
-      name: "Create Article",
-      path: "/articles/create",
-      icon: <PlusCircle size={20} />,
+      title: 'Create Article',
+      path: '/articles/create',
+      icon: PlusCircle,
     },
     {
-      name: "Settings",
-      path: "/settings",
-      icon: <Settings size={20} />,
+      title: 'Settings',
+      path: '/settings',
+      icon: Settings,
     },
   ];
 
+  const logout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
+  };
+
   return (
-    <div className="w-64 bg-secondaryDark border-r border-gray-800 min-h-screen p-5 sticky top-0">
-      <div className="flex justify-center mb-8">
-        <img src="/logo.png" alt="logo" className="h-10 object-contain" />
-      </div>
+    <aside className="w-72 bg-zinc-900 border-r border-zinc-800 p-5 hidden md:block">
+      <h1 className="text-2xl font-bold mb-10">TechPolarity</h1>
 
-      <div className="space-y-3">
-        {menus.map((menu) => (
-          <Link
-            key={menu.name}
-            to={menu.path}
-            className={`flex items-center gap-3 p-4 rounded-xl font-medium transition-all duration-300 ${
-              location.pathname === menu.path
-                ? "bg-primary text-white shadow-lg shadow-red-500/50"
-                : "text-gray-300 hover:bg-gray-800 hover:text-white"
-            }`}
-          >
-            {menu.icon}
-            {menu.name}
-          </Link>
-        ))}
-      </div>
+      <nav className="space-y-2">
+        {menus.map((menu) => {
+          const Icon = menu.icon;
 
-      <div className="mt-8 pt-8 border-t border-gray-800">
-        <p className="text-xs text-gray-500 px-4">
-          © 2024 TechPolarity. All rights reserved.
-        </p>
-      </div>
-    </div>
+          return (
+            <NavLink
+              key={menu.path}
+              to={menu.path}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                  isActive
+                    ? 'bg-violet-600 text-white'
+                    : 'hover:bg-zinc-800 text-zinc-300'
+                }`
+              }
+            >
+              <Icon size={20} />
+              {menu.title}
+            </NavLink>
+          );
+        })}
+      </nav>
+
+      <button
+        onClick={logout}
+        className="mt-10 flex items-center gap-3 text-red-400 hover:text-red-500"
+      >
+        <LogOut size={18} /> Logout
+      </button>
+    </aside>
   );
 };
 

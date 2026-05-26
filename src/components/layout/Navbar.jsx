@@ -1,42 +1,25 @@
-import { LogOut, Settings } from "lucide-react";
-import { useNavigate, Link } from "react-router-dom";
+import { Bell, Search } from 'lucide-react';
 
 const Navbar = () => {
-  const navigate = useNavigate();
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
-
   return (
-    <div className="h-20 bg-secondaryDark border-b border-gray-800 flex items-center justify-between px-8 sticky top-0 z-50">
-      <div className="w-32"></div>
-
-      <div className="flex flex-col items-center">
-        <img src="/logo.png" alt="logo" className="h-12 object-contain" />
-        <h1 className="text-sm font-semibold tracking-wide text-primary">
-          TECHPOLARITY ADMIN
-        </h1>
+    <header className="h-20 border-b border-zinc-800 bg-zinc-900 flex items-center justify-between px-6">
+      <div className="flex items-center gap-3 bg-zinc-800 rounded-xl px-4 py-2 w-80">
+        <Search size={18} />
+        <input
+          type="text"
+          placeholder="Search..."
+          className="bg-transparent outline-none w-full"
+        />
       </div>
 
-      <div className="flex items-center gap-4">
-        <Link
-          to="/settings"
-          className="text-gray-400 hover:text-primary p-2 hover:bg-gray-800 rounded-lg transition"
-        >
-          <Settings size={20} />
-        </Link>
+      <div className="flex items-center gap-5">
+        <Bell />
 
-        <button
-          onClick={logout}
-          className="bg-primary text-white px-5 py-2 rounded-lg flex items-center gap-2 hover:bg-red-600 transition"
-        >
-          <LogOut size={18} />
-          Logout
-        </button>
+        <div className="w-10 h-10 rounded-full bg-violet-600 flex items-center justify-center">
+          K
+        </div>
       </div>
-    </div>
+    </header>
   );
 };
 

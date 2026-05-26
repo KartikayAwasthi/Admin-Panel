@@ -1,48 +1,58 @@
-import { Edit, Trash2 } from "lucide-react";
-import { Link } from "react-router-dom";
-import Badge from "../ui/Badge";
-import { formatDate } from "../../utils/formatDate";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 
-const ArticleTable = ({ articles, onDelete, loading }) => {
+const data = [
+  {
+    title: "AI Future",
+    status: "Published",
+    date: "26 May 2026",
+  },
+  {
+    title: "React Admin Panel",
+    status: "Draft",
+    date: "25 May 2026",
+  },
+];
+
+const ArticleTable = () => {
   return (
-    <div className="bg-secondaryDark rounded-xl border border-gray-800 overflow-hidden">
-      <table className="w-full">
-        <thead className="bg-gray-900 border-b border-gray-800">
+    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden">
+      <table className="w-full text-left">
+        <thead className="bg-zinc-800">
           <tr>
-            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Title</th>
-            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Status</th>
-            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Date</th>
-            <th className="px-6 py-4 text-right text-sm font-semibold text-gray-300">Actions</th>
+            <th className="p-4">Title</th>
+            <th className="p-4">Status</th>
+            <th className="p-4">Date</th>
+            <th className="p-4 text-center">Actions</th>
           </tr>
         </thead>
+
         <tbody>
-          {articles.map((article) => (
-            <tr key={article.slug} className="border-b border-gray-800 hover:bg-gray-800/50 transition">
-              <td className="px-6 py-4">
-                <div>
-                  <p className="font-medium text-white">{article.title}</p>
-                  <p className="text-sm text-gray-500">{article.slug}</p>
-                </div>
-              </td>
-              <td className="px-6 py-4">
-                <Badge variant={article.status === "published" ? "success" : "warning"}>
+          {data.map((article, index) => (
+            <tr
+              key={index}
+              className="border-t border-zinc-800 hover:bg-zinc-800/40 transition-all"
+            >
+              <td className="p-4">{article.title}</td>
+
+              <td className="p-4">
+                <span className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm">
                   {article.status}
-                </Badge>
+                </span>
               </td>
-              <td className="px-6 py-4 text-sm text-gray-400">{formatDate(article.created_at)}</td>
-              <td className="px-6 py-4">
-                <div className="flex items-center justify-end gap-3">
-                  <Link
-                    to={`/articles/edit/${article.slug}`}
-                    className="text-blue-400 hover:text-blue-300 p-2 hover:bg-blue-900/30 rounded-lg transition"
-                  >
-                    <Edit size={18} />
-                  </Link>
-                  <button
-                    onClick={() => onDelete(article.slug, article.title)}
-                    disabled={loading}
-                    className="text-red-400 hover:text-red-300 p-2 hover:bg-red-900/30 rounded-lg transition disabled:opacity-50"
-                  >
+
+              <td className="p-4">{article.date}</td>
+
+              <td className="p-4">
+                <div className="flex items-center justify-center gap-4">
+                  <button className="text-blue-400 hover:text-blue-500">
+                    <Eye size={18} />
+                  </button>
+
+                  <button className="text-yellow-400 hover:text-yellow-500">
+                    <Pencil size={18} />
+                  </button>
+
+                  <button className="text-red-400 hover:text-red-500">
                     <Trash2 size={18} />
                   </button>
                 </div>
@@ -55,5 +65,4 @@ const ArticleTable = ({ articles, onDelete, loading }) => {
   );
 };
 
-export default ArticleTable;
 export default ArticleTable;

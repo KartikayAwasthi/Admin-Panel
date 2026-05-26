@@ -27,3 +27,8 @@ html {
   background: #ff6347;
   border-radius: 10px;
 }
+
+body {
+  background: #09090b;
+  color: white;
+}

@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminLayout from "../../components/layout/AdminLayout";
 import ArticleForm from "../../components/articles/ArticleForm";
-import { useArticles } from "../../hooks/useArticles";
-import { articleService } from "../../services/articleService";
+import useArticles from "../../hooks/useArticles";import { articleService } from "../../services/articleService";
 import Loader from "../../components/ui/Loader";
 
 const EditArticle = () => {
